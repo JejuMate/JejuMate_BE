@@ -1,17 +1,20 @@
 package com.Jejumate.Jejumate_BE.domain.user.domain;
 
 import com.Jejumate.Jejumate_BE.domain.user.enums.Provider;
+import com.Jejumate.Jejumate_BE.global.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user")
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,27 +31,12 @@ public class User {
     @Column(name = "provider_id", nullable = false)
     private String providerId;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
-
+    @Builder
     public User(String email, Provider provider, String providerId) {
         this.email = email;
         this.provider = provider;
         this.providerId = providerId;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
     }
 
-    public void updateInfo(String email) {
-        this.email = email;
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+    // ========== 비즈니스 로직 메서드 ==========
 }
