@@ -4,8 +4,8 @@ spring:
 
 jwt:
     secret-key: ${JWT_SECRET_KEY}
-    access-token-expiration-ms: 3600000 # 1??
-    refresh-token-expiration-ms: 1209600000 # 14?
+    access-token-validity: 3600000 #1시간
+    refresh-token-validity: 1209600000 #14일
 
 kakao:
     client-id: ${KAKAO_CLIENT_ID}
