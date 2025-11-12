@@ -1,4 +1,4 @@
-package com.Jejumate.Jejumate_BE.global.security;
+package com.Jejumate.Jejumate_BE.global.security.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
