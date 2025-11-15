@@ -1,6 +1,7 @@
 package com.Jejumate.Jejumate_BE.domain.schedule.domain;
 
-import com.Jejumate.Jejumate_BE.domain.schedule.enums.ScheduleStatus;
+import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleItemDto;
+import com.Jejumate.Jejumate_BE.domain.schedule.enums.TimeSlot;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,8 +16,6 @@ import java.util.List;
 @Table(name = "schedules")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class Schedule {
 
     @Id
@@ -53,11 +52,9 @@ public class Schedule {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    @Builder.Default
-    private ScheduleStatus status = ScheduleStatus.DRAFT;
+    private ScheduleStatus status;
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
     private List<ScheduleItem> items = new ArrayList<>();
 
     @CreationTimestamp
@@ -67,4 +64,64 @@ public class Schedule {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @Builder
+    public Schedule(
+            Long userId,
+            String title,
+            LocalDate startDate,
+            LocalDate endDate,
+            Integer totalDays,
+            String travelStyle,
+            String companions,
+            String ageGroup,
+            String additionalRequest,
+            ScheduleStatus status
+    ) {
+        this.userId = userId;
+        this.title = title;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.totalDays = totalDays;
+        this.travelStyle = travelStyle;
+        this.companions = companions;
+        this.ageGroup = ageGroup;
+        this.additionalRequest = additionalRequest;
+        this.status = status != null ? status : ScheduleStatus.DRAFT;
+        this.items = new ArrayList<>();
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateStatus(ScheduleStatus status) {
+        this.status = status;
+    }
+
+    public ScheduleItem addNewItem(ScheduleItemDto dto) {
+        ScheduleItem item = ScheduleItem.createWithSchedule(
+                this,
+                dto.getDayNumber(),
+                TimeSlot.valueOf(dto.getTimeSlot()),
+                dto.getPlaceName(),
+                dto.getCategory(),
+                dto.getLatitude(),
+                dto.getLongitude(),
+                dto.getAddress(),
+                dto.getDescription(),
+                dto.getOrderIndex()
+        );
+
+        this.items.add(item);
+        return item;
+    }
+
+    public void addItem(ScheduleItem item) {
+        this.items.add(item);
+    }
+
+    public enum ScheduleStatus {
+        DRAFT, SAVED, DELETED
+    }
 }

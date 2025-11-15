@@ -62,4 +62,31 @@ public class ScheduleItem {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    static ScheduleItem createWithSchedule(
+            Schedule schedule,
+            Integer dayNumber,
+            TimeSlot timeSlot,
+            String placeName,
+            String category,
+            BigDecimal latitude,
+            BigDecimal longitude,
+            String address,
+            String description,
+            Integer orderIndex
+    ){
+        ScheduleItem item = new ScheduleItem();
+        item.schedule = schedule;
+        item.dayNumber = dayNumber;
+        item.timeSlot = timeSlot;
+        item.placeName = placeName;
+        item.category = category;
+        item.latitude = latitude;
+        item.longitude = longitude;
+        item.address = address;
+        item.description = description;
+        item.orderIndex = orderIndex != null ? orderIndex : 0;
+
+        return item;
+    }
 }
