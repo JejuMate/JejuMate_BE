@@ -66,11 +66,15 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
-        //CORS, restAuthenticationEntryPoint(401 예외 핸들러) 설정
+        //CORS, restAuthenticationEntryPoint(401 예외 핸들러), h2 콘솔 프레임 허용 설정
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .exceptionHandling(e -> e.authenticationEntryPoint(restAuthenticationEntryPoint));
-
+                .exceptionHandling(e -> e.authenticationEntryPoint(restAuthenticationEntryPoint))
+                .headers(headers ->
+                headers.frameOptions(frameOptions ->
+                        frameOptions.sameOrigin()
+                )
+        );
         //API 경로별 접근 권한 설정
         http
                 .authorizeHttpRequests(authz -> authz

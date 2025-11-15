@@ -31,7 +31,7 @@ public class JwtTokenProvider {
     //비밀키 초기화 메서드
     @PostConstruct
     public void init() {
-        byte[] keyBytes = Decoders.BASE64URL.decode(jwtProperties.getSecretKey());
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecretKey());
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
