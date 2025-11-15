@@ -129,4 +129,28 @@ public class JwtTokenProvider {
         //UserDetails 객체로 Authentication(인증 객체) 생성
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
+
+    //refreshToken 토큰 만료 임박 확인 (슬라이딩 세션을 위해 추가)
+    public boolean isTokenExpiringSoon(String refreshToken, long thresholdMillis) {
+        try {
+            if (refreshToken.startsWith("Bearer ")) {
+                refreshToken = refreshToken.substring(7).trim();
+            }
+
+            Claims claims = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(refreshToken)
+                    .getPayload();
+
+            Date expiration = claims.getExpiration();
+            long now = System.currentTimeMillis();
+
+            //(만료 시간 - 현재 시간) < 기준 시간(7일)
+            return expiration.getTime() - now < thresholdMillis;
+
+        } catch (JwtException e) {
+            throw new UserException(UserErrorCode.INVALID_TOKEN);
+        }
+    }
 }
