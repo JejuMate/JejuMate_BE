@@ -1,4 +1,4 @@
-package com.Jejumate.Jejumate_BE.global.oauth2;
+package com.Jejumate.Jejumate_BE.domain.user.service;
 
 import com.Jejumate.Jejumate_BE.domain.user.domain.RefreshToken;
 import com.Jejumate.Jejumate_BE.domain.user.domain.User;
@@ -11,6 +11,8 @@ import com.Jejumate.Jejumate_BE.domain.user.repository.RefreshTokenRepository;
 import com.Jejumate.Jejumate_BE.domain.user.repository.UserRepository;
 import com.Jejumate.Jejumate_BE.global.jwt.JwtProperties;
 import com.Jejumate.Jejumate_BE.global.jwt.JwtTokenProvider;
+import com.Jejumate.Jejumate_BE.global.oauth2.KakaoClient;
+import com.Jejumate.Jejumate_BE.global.oauth2.KakaoUserInfoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -80,13 +82,13 @@ public class AuthService {
         //Refresh Token DB에 저장/갱신
         saveOrUpdateRefreshToken(user, refreshToken);
 
-        //
+        //로그인 응답 정보 반환
         return AuthLoginResponse.of(accessToken, refreshToken, user.getId(), user.getNickname(), isNewMember);
     }
 
     //Access Token 재발급
     @Transactional
-    public TokenRefreshResponse refreshTokens(String providedRefreshToken) {
+    public TokenRefreshResponse tokensRefresh(String providedRefreshToken) {
         //Refresh Token 조회
         RefreshToken refreshToken = refreshTokenRepository.findByRefreshToken(providedRefreshToken)
                 .orElseThrow(() -> new UserException(UserErrorCode.INVALID_TOKEN)); //유효하지 않은 리프레시 토큰
@@ -126,6 +128,7 @@ public class AuthService {
         return AuthLoginResponse.of(accessToken, refreshToken, user.getId(), user.getNickname(),false);
     }
 
+    // ========== 헬퍼 메서드 ==========
     //Refresh Token DB에 저장/갱신
     private void saveOrUpdateRefreshToken(User user, String refreshTokenString) {
         LocalDateTime expiryDate = calculateExpiryDate();
