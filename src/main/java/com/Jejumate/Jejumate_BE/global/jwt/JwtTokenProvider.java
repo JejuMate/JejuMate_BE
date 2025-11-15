@@ -4,7 +4,7 @@ import com.Jejumate.Jejumate_BE.domain.user.domain.User;
 import com.Jejumate.Jejumate_BE.domain.user.exception.UserErrorCode;
 import com.Jejumate.Jejumate_BE.domain.user.exception.UserException;
 import com.Jejumate.Jejumate_BE.domain.user.repository.UserRepository;
-import com.Jejumate.Jejumate_BE.global.security.domain.CustomUserDetails;
+import com.Jejumate.Jejumate_BE.global.security.CustomUserDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

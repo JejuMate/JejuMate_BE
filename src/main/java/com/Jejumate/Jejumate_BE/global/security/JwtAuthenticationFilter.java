@@ -1,4 +1,4 @@
-package com.Jejumate.Jejumate_BE.global.security.filter;
+package com.Jejumate.Jejumate_BE.global.security;
 
 import com.Jejumate.Jejumate_BE.domain.user.exception.UserException;
 import com.Jejumate.Jejumate_BE.global.jwt.JwtTokenProvider;
