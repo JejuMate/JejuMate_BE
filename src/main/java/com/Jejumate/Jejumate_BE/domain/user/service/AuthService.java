@@ -58,7 +58,6 @@ public class AuthService {
             log.info("[AuthService] 신규 사용자 등록 - Kakao ID: {}", providerId);
             isNewMember = true;
             user = userRepository.save(User.builder()
-                    .email(userInfo.getEmail())
                     .provider(Provider.KAKAO)
                     .providerId(providerId)
                     .nickname(userInfo.getNickname())
