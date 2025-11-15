@@ -1,6 +1,7 @@
 package com.Jejumate.Jejumate_BE.domain.user.domain;
 
 import com.Jejumate.Jejumate_BE.domain.user.enums.Provider;
+import com.Jejumate.Jejumate_BE.domain.user.enums.UserStatus;
 import com.Jejumate.Jejumate_BE.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -26,6 +27,10 @@ public class User extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private UserStatus status = UserStatus.ACTIVE;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Provider provider;
 
     @Column(name = "provider_id", nullable = false)
@@ -36,6 +41,7 @@ public class User extends BaseEntity {
         this.email = email;
         this.provider = provider;
         this.providerId = providerId;
+        this.status = UserStatus.ACTIVE;
     }
 
     // ========== 비즈니스 로직 메서드 ==========
