@@ -3,6 +3,7 @@ package com.Jejumate.Jejumate_BE.domain.schedule.converter;
 import com.Jejumate.Jejumate_BE.domain.schedule.domain.Schedule;
 import com.Jejumate.Jejumate_BE.domain.schedule.domain.ScheduleItem;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleCreateRequest;
+import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleItemDto;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleListResponse;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleResponse;
 import lombok.RequiredArgsConstructor;
@@ -60,13 +61,15 @@ public class ScheduleConverter {
     }
 
     public Schedule toEntity(Long userId, ScheduleCreateRequest request) {
+
+        String title = generateTitle(request);
         // 총 일수 계산
         int totalDays = calculateTotalDays(request.getStartDate(), request.getEndDate());
 
         // Schedule 생성
         Schedule schedule = Schedule.builder()
                 .userId(userId)
-                .title(request.getTitle())
+                .title(title)
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .totalDays(totalDays)
@@ -93,6 +96,56 @@ public class ScheduleConverter {
         return schedules.stream()
                 .map(this::toListResponse)
                 .collect(Collectors.toList());
+    }
+
+    private String generateTitle(ScheduleCreateRequest request) {
+        // 2. 장소명 기반 제목 생성
+        if (request.getItems() != null && !request.getItems().isEmpty()) {
+            return generateTitleFromPlaces(request.getItems());
+        }
+
+        // 3. 여행 스타일 기반 제목 생성 (Fallback)
+        return generateTitleFromConstraints(request);
+    }
+
+    private String generateTitleFromPlaces(List<ScheduleItemDto> items) {
+        String firstPlace = items.get(0).getPlaceName();
+
+        // 2개 이상이면 "&"로 연결
+        if (items.size() > 1) {
+            String secondPlace = items.get(1).getPlaceName();
+            return firstPlace + " & " + secondPlace + " 여행";
+        }
+
+        // 1개만 있으면
+        return firstPlace + " 여행";
+    }
+
+    private String generateTitleFromConstraints(ScheduleCreateRequest request) {
+        String companions = getCompanionsText(request.getCompanions());
+        String style = request.getTravelStyle() != null ?
+                request.getTravelStyle() : "제주도";
+
+        return companions + " " + style + " 여행";
+    }
+
+    private String getCompanionsText(String companions) {
+        if (companions == null) {
+            return "나만의";
+        }
+
+        switch (companions) {
+            case "가족":
+                return "가족과 함께하는";
+            case "친구":
+                return "친구와 함께하는";
+            case "연인":
+                return "연인과 함께하는";
+            case "혼자":
+                return "나만의";
+            default:
+                return companions + "과 함께하는";
+        }
     }
 
     // 총 일수 계산 헬퍼 메서드

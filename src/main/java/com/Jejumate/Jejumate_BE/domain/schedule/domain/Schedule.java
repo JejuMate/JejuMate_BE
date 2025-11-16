@@ -53,7 +53,7 @@ public class Schedule {
     private ScheduleStatus status;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "schedule_id", nullable = false)  // ← FK를 Schedule이 관리
+    @JoinColumn(name = "schedule_id", nullable = false)
     private List<ScheduleItem> items = new ArrayList<>();
 
     @CreationTimestamp
