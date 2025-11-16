@@ -2,7 +2,7 @@ package com.Jejumate.Jejumate_BE.domain.schedule.converter;
 
 import com.Jejumate.Jejumate_BE.domain.schedule.domain.ScheduleItem;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleItemDto;
-import com.Jejumate.Jejumate_BE.domain.schedule.enums.TimeSlot;  // ✅ 임포트 추가!
+import com.Jejumate.Jejumate_BE.domain.schedule.enums.TimeSlot;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -38,7 +38,7 @@ public class ScheduleItemConverter {
 
         return ScheduleItem.builder()
                 .dayNumber(dto.getDayNumber())
-                .timeSlot(TimeSlot.valueOf(dto.getTimeSlot()))  // ✅ 수정!
+                .timeSlot(TimeSlot.valueOf(dto.getTimeSlot()))
                 .placeName(dto.getPlaceName())
                 .category(dto.getCategory())
                 .latitude(dto.getLatitude())

@@ -18,7 +18,7 @@ import java.util.List;
 public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
-    private final ScheduleConverter scheduleConverter;  // ← Converter 주입
+    private final ScheduleConverter scheduleConverter;
 
     // 일정 생성
     @Transactional

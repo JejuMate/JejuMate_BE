@@ -1,7 +1,6 @@
 package com.Jejumate.Jejumate_BE.domain.schedule.repository;
 
 import com.Jejumate.Jejumate_BE.domain.schedule.domain.Schedule;
-import com.Jejumate.Jejumate_BE.domain.schedule.enums.ScheduleStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

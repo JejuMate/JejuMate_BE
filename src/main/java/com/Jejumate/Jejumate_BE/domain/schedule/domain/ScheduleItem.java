@@ -1,8 +1,19 @@
 package com.Jejumate.Jejumate_BE.domain.schedule.domain;
 
 import com.Jejumate.Jejumate_BE.domain.schedule.enums.TimeSlot;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 

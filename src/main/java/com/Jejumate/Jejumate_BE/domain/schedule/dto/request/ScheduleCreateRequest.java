@@ -19,4 +19,3 @@ public class ScheduleCreateRequest {
     private String additionalRequest;
     private List<ScheduleItemDto> items;
 }
-
