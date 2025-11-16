@@ -1,6 +1,8 @@
 package com.Jejumate.Jejumate_BE.domain.schedule.converter;
 
 import com.Jejumate.Jejumate_BE.domain.schedule.domain.ScheduleItem;
+import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleItemAddRequest;
+import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleItemUpdateRequest;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleItemDto;
 import com.Jejumate.Jejumate_BE.domain.schedule.enums.TimeSlot;
 import org.springframework.stereotype.Component;
@@ -36,9 +38,51 @@ public class ScheduleItemConverter {
             return null;
         }
 
+        TimeSlot timeSlot = safeConvertToTimeSlot(dto.getTimeSlot());
+
         return ScheduleItem.builder()
                 .dayNumber(dto.getDayNumber())
-                .timeSlot(TimeSlot.valueOf(dto.getTimeSlot()))
+                .timeSlot(timeSlot)
+                .placeName(dto.getPlaceName())
+                .category(dto.getCategory())
+                .latitude(dto.getLatitude())
+                .longitude(dto.getLongitude())
+                .address(dto.getAddress())
+                .description(dto.getDescription())
+                .orderIndex(dto.getOrderIndex())
+                .build();
+    }
+
+    public ScheduleItem toEntity(ScheduleItemAddRequest dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        TimeSlot timeSlot = safeConvertToTimeSlot(dto.getTimeSlot());
+
+        return ScheduleItem.builder()
+                .dayNumber(dto.getDayNumber())
+                .timeSlot(timeSlot)
+                .placeName(dto.getPlaceName())
+                .category(dto.getCategory())
+                .latitude(dto.getLatitude())
+                .longitude(dto.getLongitude())
+                .address(dto.getAddress())
+                .description(dto.getDescription())
+                .orderIndex(dto.getOrderIndex())
+                .build();
+    }
+
+    public ScheduleItem toEntity(ScheduleItemUpdateRequest dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        TimeSlot timeSlot = safeConvertToTimeSlot(dto.getNewTimeSlot());
+
+        return ScheduleItem.builder()
+                .dayNumber(dto.getNewDayNumber())
+                .timeSlot(timeSlot)
                 .placeName(dto.getPlaceName())
                 .category(dto.getCategory())
                 .latitude(dto.getLatitude())
@@ -58,5 +102,16 @@ public class ScheduleItemConverter {
         return items.stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
+    }
+
+    private TimeSlot safeConvertToTimeSlot(String timeSlotStr) {
+        if (timeSlotStr == null || timeSlotStr.trim().isEmpty()) {
+            throw new IllegalArgumentException("TimeSlot은 null이거나 비어있을 수 없습니다.");
+        }
+        try {
+            return TimeSlot.valueOf(timeSlotStr);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("유효하지 않은 TimeSlot 값입니다: " + timeSlotStr);
+        }
     }
 }
