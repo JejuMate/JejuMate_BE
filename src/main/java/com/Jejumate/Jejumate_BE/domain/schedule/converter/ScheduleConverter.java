@@ -6,6 +6,8 @@ import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleCreateReques
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleItemDto;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleListResponse;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleResponse;
+import com.Jejumate.Jejumate_BE.domain.schedule.enums.ScheduleStatus;
+import com.Jejumate.Jejumate_BE.domain.schedule.enums.TimeSlot;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.LinkedHashSet;
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Component
@@ -24,6 +27,14 @@ public class ScheduleConverter {
     private final ScheduleItemConverter itemConverter;
 
     public ScheduleResponse toDetailResponse(Schedule schedule) {
+        List<ScheduleItemDto> sortedItems = schedule.getItems().stream()
+                .map(itemConverter::toDto)
+                .sorted(
+                        Comparator.comparing(ScheduleItemDto::getDayNumber)
+                                .thenComparing(item -> TimeSlot.valueOf(item.getTimeSlot()))
+                )
+                .collect(Collectors.toList());
+
         return ScheduleResponse.builder()
                 .scheduleId(schedule.getId())
                 .title(schedule.getTitle())
@@ -35,7 +46,7 @@ public class ScheduleConverter {
                 .ageGroup(schedule.getAgeGroup())
                 .additionalRequest(schedule.getAdditionalRequest())
                 .status(schedule.getStatus().name())
-                .items(itemConverter.toDtoList(schedule.getItems()))
+                .items(sortedItems)
                 .createdAt(schedule.getCreatedAt())
                 .updatedAt(schedule.getUpdatedAt())
                 .build();
@@ -77,7 +88,7 @@ public class ScheduleConverter {
                 .companions(request.getCompanions())
                 .ageGroup(request.getAgeGroup())
                 .additionalRequest(request.getAdditionalRequest())
-                .status(Schedule.ScheduleStatus.SAVED)
+                .status(ScheduleStatus.SAVED)
                 .build();
 
         // ScheduleItem 추가
