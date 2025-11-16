@@ -1,6 +1,9 @@
 package com.Jejumate.Jejumate_BE.domain.schedule.controller;
 
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleCreateRequest;
+import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleItemAddRequest;
+import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleItemRemoveRequest;
+import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleItemUpdateRequest;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleListResponse;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleResponse;
 import com.Jejumate.Jejumate_BE.domain.schedule.service.ScheduleService;
@@ -102,6 +105,50 @@ public class ScheduleController {
             @RequestBody String newTitle
     ) {
         ScheduleResponse response = scheduleService.updateScheduleTitle(userId, scheduleId, newTitle);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{scheduleId}/items")
+    @Operation(
+            summary = "일정 아이템(장소) 추가",
+            description = "특정 일정에 새로운 장소를 추가합니다."
+    )
+    public ResponseEntity<ScheduleResponse> addScheduleItem(
+            @RequestHeader("user-id") Long userId,
+            @PathVariable Long scheduleId,
+            @RequestBody ScheduleItemAddRequest request
+    ) {
+        ScheduleResponse response = scheduleService.addScheduleItem(userId, scheduleId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    // 일정 아이템(장소) 교체 (Update)
+    @PatchMapping("/{scheduleId}/items")
+    @Operation(
+            summary = "일정 아이템(장소) 교체",
+            description = "특정 일정의 기존 장소를 새로운 장소로 교체(update)합니다."
+            )
+    public ResponseEntity<ScheduleResponse> updateScheduleItem(
+            @RequestHeader("user-id") Long userId,
+            @PathVariable Long scheduleId,
+            @RequestBody ScheduleItemUpdateRequest request
+    ) {
+        ScheduleResponse response = scheduleService.updateScheduleItem(userId, scheduleId, request);
+        return ResponseEntity.ok(response);
+    }
+
+    // 일정 아이템(장소) 삭제
+    @DeleteMapping("/{scheduleId}/items")
+    @Operation(
+            summary = "일정 아이템(장소) 삭제",
+            description = "특정 일정에서 장소를 삭제합니다."
+    )
+    public ResponseEntity<ScheduleResponse> removeScheduleItem(
+            @RequestHeader("user-id") Long userId,
+            @PathVariable Long scheduleId,
+            @RequestBody ScheduleItemRemoveRequest request
+    ) {
+        ScheduleResponse response = scheduleService.removeScheduleItem(userId, scheduleId, request);
         return ResponseEntity.ok(response);
     }
 }
