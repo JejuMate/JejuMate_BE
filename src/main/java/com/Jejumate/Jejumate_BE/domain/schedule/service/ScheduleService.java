@@ -12,6 +12,8 @@ import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleListRespons
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleResponse;
 import com.Jejumate.Jejumate_BE.domain.schedule.enums.ScheduleStatus;
 import com.Jejumate.Jejumate_BE.domain.schedule.enums.TimeSlot;
+import com.Jejumate.Jejumate_BE.domain.schedule.exception.ScheduleErrorCode;
+import com.Jejumate.Jejumate_BE.domain.schedule.exception.ScheduleException;
 import com.Jejumate.Jejumate_BE.domain.schedule.repository.ScheduleRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +48,7 @@ public class ScheduleService {
     public ScheduleResponse getScheduleDetail(Long userId, Long scheduleId) {
         Schedule schedule = scheduleRepository
                 .findScheduleDetailById(scheduleId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ScheduleException(ScheduleErrorCode.SCHEDULE_NOT_FOUND));
         return scheduleConverter.toDetailResponse(schedule);
     }
 
@@ -55,7 +57,7 @@ public class ScheduleService {
     public void deleteSchedule(Long userId, Long scheduleId) {
         Schedule schedule = scheduleRepository
                 .findScheduleDetailById(scheduleId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ScheduleException(ScheduleErrorCode.SCHEDULE_NOT_FOUND));
 
         schedule.updateStatus(ScheduleStatus.DELETED);
     }
@@ -65,7 +67,7 @@ public class ScheduleService {
     public ScheduleResponse updateScheduleTitle(Long userId, Long scheduleId, String newTitle) {
         Schedule schedule = scheduleRepository
                 .findScheduleDetailById(scheduleId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ScheduleException(ScheduleErrorCode.SCHEDULE_NOT_FOUND));
         schedule.updateTitle(newTitle);
         return scheduleConverter.toDetailResponse(schedule);
     }
@@ -89,7 +91,7 @@ public class ScheduleService {
         TimeSlot targetTimeSlot = convertToTimeSlot(request.getTargetTimeSlot());
         ScheduleItem itemToReplace = schedule
                 .findItemByDayAndTime(request.getTargetDayNumber(), targetTimeSlot)
-                .orElseThrow(() -> new IllegalArgumentException("교체할 일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ScheduleException(ScheduleErrorCode.SCHEDULE_ITEM_NOT_FOUND));
 
         ScheduleItem newItem = scheduleItemConverter.toEntity(request);
         schedule.removeItem(itemToReplace);
@@ -106,7 +108,7 @@ public class ScheduleService {
         TimeSlot timeSlot = convertToTimeSlot(request.getTimeSlot());
         ScheduleItem itemToRemove = schedule
                 .findItemByDayAndTime(request.getDayNumber(), timeSlot)
-                .orElseThrow(() -> new IllegalArgumentException("삭제할 일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ScheduleException(ScheduleErrorCode.SCHEDULE_ITEM_NOT_FOUND));
 
         schedule.removeItem(itemToRemove);
 
@@ -118,7 +120,7 @@ public class ScheduleService {
     private Schedule findScheduleForUser(Long userId, Long scheduleId) {
         return scheduleRepository
                 .findScheduleDetailById(scheduleId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ScheduleException(ScheduleErrorCode.SCHEDULE_NOT_FOUND));
     }
 
     // TimeSlot 문자열 변환 (Service 내부용)
@@ -126,7 +128,7 @@ public class ScheduleService {
         try {
             return TimeSlot.valueOf(timeSlotStr);
         } catch (Exception e) {
-            throw new IllegalArgumentException("유효하지 않은 TimeSlot입니다: " + timeSlotStr);
+            throw new ScheduleException(ScheduleErrorCode.INVALID_TIMESLOT);
         }
     }
 }
