@@ -13,18 +13,12 @@ import java.time.LocalDateTime;
 @Table(name = "schedule_items")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-@Builder
 public class ScheduleItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "schedule_id", nullable = false)
-    private Schedule schedule;
 
     @Column(name = "day_number", nullable = false)
     private Integer dayNumber;
@@ -52,8 +46,7 @@ public class ScheduleItem {
     private String description;
 
     @Column(name = "order_index", nullable = false)
-    @Builder.Default
-    private Integer orderIndex = 0;
+    private Integer orderIndex;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -63,8 +56,8 @@ public class ScheduleItem {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    static ScheduleItem createWithSchedule(
-            Schedule schedule,
+    @Builder
+    public ScheduleItem(
             Integer dayNumber,
             TimeSlot timeSlot,
             String placeName,
@@ -74,19 +67,15 @@ public class ScheduleItem {
             String address,
             String description,
             Integer orderIndex
-    ){
-        ScheduleItem item = new ScheduleItem();
-        item.schedule = schedule;
-        item.dayNumber = dayNumber;
-        item.timeSlot = timeSlot;
-        item.placeName = placeName;
-        item.category = category;
-        item.latitude = latitude;
-        item.longitude = longitude;
-        item.address = address;
-        item.description = description;
-        item.orderIndex = orderIndex != null ? orderIndex : 0;
-
-        return item;
+    ) {
+        this.dayNumber = dayNumber;
+        this.timeSlot = timeSlot;
+        this.placeName = placeName;
+        this.category = category;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+        this.description = description;
+        this.orderIndex = orderIndex != null ? orderIndex : 0;
     }
 }

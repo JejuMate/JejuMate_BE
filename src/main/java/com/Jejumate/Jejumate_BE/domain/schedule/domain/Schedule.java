@@ -1,7 +1,5 @@
 package com.Jejumate.Jejumate_BE.domain.schedule.domain;
 
-import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleItemDto;
-import com.Jejumate.Jejumate_BE.domain.schedule.enums.TimeSlot;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -54,7 +52,8 @@ public class Schedule {
     @Column(nullable = false, length = 50)
     private ScheduleStatus status;
 
-    @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "schedule_id", nullable = false)  // ← FK를 Schedule이 관리
     private List<ScheduleItem> items = new ArrayList<>();
 
     @CreationTimestamp
@@ -91,34 +90,16 @@ public class Schedule {
         this.items = new ArrayList<>();
     }
 
+    public void addItem(ScheduleItem item) {
+        this.items.add(item);
+    }
+
     public void updateTitle(String title) {
         this.title = title;
     }
 
     public void updateStatus(ScheduleStatus status) {
         this.status = status;
-    }
-
-    public ScheduleItem addNewItem(ScheduleItemDto dto) {
-        ScheduleItem item = ScheduleItem.createWithSchedule(
-                this,
-                dto.getDayNumber(),
-                TimeSlot.valueOf(dto.getTimeSlot()),
-                dto.getPlaceName(),
-                dto.getCategory(),
-                dto.getLatitude(),
-                dto.getLongitude(),
-                dto.getAddress(),
-                dto.getDescription(),
-                dto.getOrderIndex()
-        );
-
-        this.items.add(item);
-        return item;
-    }
-
-    public void addItem(ScheduleItem item) {
-        this.items.add(item);
     }
 
     public enum ScheduleStatus {
