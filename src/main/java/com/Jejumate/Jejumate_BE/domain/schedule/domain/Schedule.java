@@ -1,5 +1,7 @@
 package com.Jejumate.Jejumate_BE.domain.schedule.domain;
 
+import com.Jejumate.Jejumate_BE.domain.schedule.enums.ScheduleStatus;
+import com.Jejumate.Jejumate_BE.domain.schedule.enums.TimeSlot;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "schedules")
@@ -102,7 +105,14 @@ public class Schedule {
         this.status = status;
     }
 
-    public enum ScheduleStatus {
-        DRAFT, SAVED, DELETED
+    public Optional<ScheduleItem> findItemByDayAndTime(Integer dayNumber, TimeSlot timeSlot) {
+        return this.items.stream()
+                .filter(item -> item.getDayNumber().equals(dayNumber) && item.getTimeSlot().equals(timeSlot))
+                .findFirst();
     }
+
+    public void removeItem(ScheduleItem item) {
+        this.items.remove(item);
+    }
+
 }
