@@ -58,6 +58,6 @@ jobs:
             sudo docker stop jejumate-server || true
             sudo docker rm jejumate-server || true
             
-            sudo docker run -d -p 80:8080 --name jejumate-server --env-file .env ${{ secrets.DOCKER_USERNAME }}/jejumate-be:latest
+            sudo docker run -d -p 8080:8080 --name jejumate-server --env-file .env ${{ secrets.DOCKER_USERNAME }}/jejumate-be:latest
             
             sudo docker image prune -f
