@@ -104,7 +104,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         //프론트엔드 localhost:5173에서 오는 API 요청을 허용
-        config.setAllowedOrigins(List.of("http://localhost:5173", "https://jejumate.com"));
+        config.setAllowedOrigins(List.of("http://localhost:5173", "https://jejumate.store"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
