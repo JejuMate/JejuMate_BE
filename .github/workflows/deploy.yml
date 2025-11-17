@@ -2,7 +2,7 @@ name: Java CI/CD with Gradle & Docker
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "develop" , "chore/#10"]
 
 permissions:
   contents: read
