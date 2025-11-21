@@ -103,7 +103,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        //프론트엔드 localhost:5173에서 오는 API 요청을 허용
+        //해당 주소에서 오는 API 요청을 허용 (로컬용, 운영용)
         config.setAllowedOrigins(List.of("http://localhost:5173", "https://jejumate.store"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
