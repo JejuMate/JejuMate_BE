@@ -9,10 +9,6 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class VisitJejuDto {
 
-    private String result;
-    private String resultMessage;
-    private int totalCount;
-    private int resultCount;
     private List<Item> items;
 
     @Data
@@ -36,28 +32,23 @@ public class VisitJejuDto {
 
         @JsonProperty("repPhoto")
         private RepPhoto repPhoto;
+
+        @JsonProperty("introduction")
+        private String introduction;
     }
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class ContentsCd {
-        private String label;
-    }
+    public static class ContentsCd { private String label; }
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class RepPhoto {
-        @JsonProperty("photoid")
-        private PhotoId photoId;
-    }
+    public static class RepPhoto { @JsonProperty("photoid") private PhotoId photoId; }
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class PhotoId {
-        @JsonProperty("imgpath")
-        private String imgPath;
-
-        @JsonProperty("thumbnailpath")
-        private String thumbnailPath;
+        @JsonProperty("imgpath") private String imgPath;
+        @JsonProperty("thumbnailpath") private String thumbnailPath;
     }
 }
