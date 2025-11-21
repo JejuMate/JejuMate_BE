@@ -52,4 +52,7 @@ kakao:
 
 visit-jeju:
   api-key: ${VISIT_JEJU_API_KEY}
+
+server:
+    forward-headers-strategy: native
   
