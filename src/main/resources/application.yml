@@ -8,7 +8,7 @@ spring:
       username: ${DB_USER}
       password: ${DB_PASSWORD}
 
-      jpa:
+    jpa:
         hibernate:
           ddl-auto: update
         properties:
