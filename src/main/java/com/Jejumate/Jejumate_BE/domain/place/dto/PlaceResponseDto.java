@@ -16,6 +16,7 @@ public class PlaceResponseDto {
     private String category;
     private String address;
     private String imageUrl;
+    private String description;
 
     public static PlaceResponseDto from(Place place) {
         return PlaceResponseDto.builder()
@@ -24,6 +25,7 @@ public class PlaceResponseDto {
                 .category(place.getCategory())
                 .address(place.getAddress())
                 .imageUrl(place.getImageUrl())
+                .description(place.getDescription())
                 .build();
     }
 }

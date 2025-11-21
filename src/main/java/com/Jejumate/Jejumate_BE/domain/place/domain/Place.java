@@ -1,14 +1,7 @@
 package com.Jejumate.Jejumate_BE.domain.place.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Column;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
@@ -29,17 +22,21 @@ public class Place {
     @Column(length = 1000)
     private String imageUrl;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Column(nullable = false)
     private Long visitCount = 0L;
 
     @Builder
-    public Place(String name, String category, String address, String imageUrl, String apiId, Long visitCount) {
+    public Place(String name, String category, String address, String imageUrl, String apiId, Long visitCount, String description) {
         this.name = name;
         this.category = category;
         this.address = address;
         this.imageUrl = imageUrl;
         this.apiId = apiId;
         this.visitCount = visitCount != null ? visitCount : 0L;
+        this.description = description;
     }
 
     public void increaseVisitCount() {
