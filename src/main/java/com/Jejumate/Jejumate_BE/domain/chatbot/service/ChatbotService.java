@@ -76,7 +76,33 @@ public class ChatbotService {
 
         //일정 생성
         scheduleService.createSchedule(userId, createRequest);
-        log.info("일정 생성");
     }
 
+    //핸들러 메서드 (일정 수정)
+    private void handleUpdateSchedule(Long userId, Long scheduleId, ChatbotResponse response) {
+        if (scheduleId == null || response.getTarget() == null || response.getNewPlace() == null) {
+            return;
+        }
+
+        ChatbotResponse.ChatbotTarget target = response.getTarget();
+        ChatbotResponse.ChatbotPlace newPlace = response.getNewPlace();
+
+        ScheduleItemUpdateRequest updateRequest = new ScheduleItemUpdateRequest(
+                target.getDay(),
+                target.getTimeSlot(),
+                newPlace.getName(),
+                newPlace.getCategory(),
+                newPlace.getLatitude(),
+                newPlace.getLongitude(),
+                newPlace.getAddress(),
+                newPlace.getDescription(),
+                0,
+                target.getDay(),
+                target.getTimeSlot()
+        );
+
+        scheduleService.updateScheduleItem(userId, scheduleId, updateRequest);
+    }
+
+    
 }
