@@ -78,7 +78,7 @@ public class ChatbotService {
         scheduleService.createSchedule(userId, createRequest);
     }
 
-    //핸들러 메서드 (일정 수정)
+    //핸들러 메서드 (일정 아이템 수정)
     private void handleUpdateSchedule(Long userId, Long scheduleId, ChatbotResponse response) {
         if (scheduleId == null || response.getTarget() == null || response.getNewPlace() == null) {
             return;
@@ -104,5 +104,17 @@ public class ChatbotService {
         scheduleService.updateScheduleItem(userId, scheduleId, updateRequest);
     }
 
-    
+    //핸들러 메서드 (일정 아이템 삭제)
+    private void handleRemovePlace(Long userId, Long scheduleId, ChatbotResponse response) {
+        if (scheduleId == null || response.getTarget() == null) return;
+
+        ChatbotResponse.ChatbotTarget target = response.getTarget();
+
+        ScheduleItemRemoveRequest removeRequest = new ScheduleItemRemoveRequest(
+                target.getDay(),
+                target.getTimeSlot()
+        );
+
+        scheduleService.removeScheduleItem(userId, scheduleId, removeRequest);
+    }
 }
