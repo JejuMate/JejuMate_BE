@@ -1,7 +1,7 @@
 package com.Jejumate.Jejumate_BE.domain.chatbot.client;
 
 import com.Jejumate.Jejumate_BE.domain.chatbot.dto.request.ChatbotResponse;
-import com.Jejumate.Jejumate_BE.domain.chatbot.dto.response.ChatbotRequest;
+import com.Jejumate.Jejumate_BE.domain.chatbot.dto.response.AiChatbotRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,8 +24,8 @@ public class ChatbotClient {
     //챗봇에게 메시지 전송 및 응답 수신
     public ChatbotResponse sendChat(String userMessage) {
 
-        ChatbotRequest request = ChatbotRequest.builder()
-                .messages(List.of(ChatbotRequest.Message.builder()
+        AiChatbotRequest request = AiChatbotRequest.builder()
+                .messages(List.of(AiChatbotRequest.Message.builder()
                         .role("user")
                         .content(userMessage)
                         .build()))

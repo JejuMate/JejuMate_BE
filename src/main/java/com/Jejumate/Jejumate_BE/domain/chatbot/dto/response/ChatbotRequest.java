@@ -1,20 +1,15 @@
 package com.Jejumate.Jejumate_BE.domain.chatbot.dto.response;
 
-import lombok.Builder;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
-import java.util.List;
+@NoArgsConstructor
+@ToString
+public class ChatbotRequestDto {
 
-@Getter
-@Builder
-public class ChatbotRequest {
+    private String action;
 
-    private List<Message> messages;
-
-    @Getter
-    @Builder
-    public static class Message {
-        private String role;
-        private String content;
-    }
+    @JsonProperty("constraints")
+    private ChatbotConstraintRequest constraints;
 }
