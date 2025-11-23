@@ -2,19 +2,23 @@ package com.Jejumate.Jejumate_BE.domain.chatbot.service;
 
 import com.Jejumate.Jejumate_BE.domain.chatbot.client.ChatbotClient;
 import com.Jejumate.Jejumate_BE.domain.chatbot.dto.request.ChatbotResponse;
+import com.Jejumate.Jejumate_BE.domain.chatbot.dto.response.ChatbotRequest;
 import com.Jejumate.Jejumate_BE.domain.chatbot.enums.ChatbotAction;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleCreateRequest;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleItemRemoveRequest;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleItemUpdateRequest;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleItemDto;
 import com.Jejumate.Jejumate_BE.domain.schedule.service.ScheduleService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,6 +28,29 @@ public class ChatbotService {
 
     private final ChatbotClient chatbotClient;
     private final ScheduleService scheduleService;
+    private final ObjectMapper objectMapper;
+
+    @Transactional
+    public ChatbotResponse sendJsonToChatbot(Long userId, ChatbotRequest request) {
+        try {
+            Map<String, Object> aiInputMap = new HashMap<>();
+
+            aiInputMap.put("user_id", userId);
+            aiInputMap.put("action", request.getAction());
+            aiInputMap.put("constraints", request.getConstraints());
+
+            //JSON 문자열로 변환 (직렬화)
+            String jsonMessage = objectMapper.writeValueAsString(aiInputMap);
+            log.info("챗봇으로 보낼 JSON: {}", jsonMessage);
+
+            //챗봇 클라이언트 호출 (문자열 전송)
+            return chat(userId, jsonMessage, null);
+
+        } catch (Exception e) {
+            log.error("JSON 변환 및 챗봇 통신 중 오류 발생", e);
+            throw new RuntimeException("AI 요청 처리 중 오류가 발생");
+        }
+    }
 
     @Transactional
     public ChatbotResponse chat(Long userId, String message, Long currentScheduleId) {
