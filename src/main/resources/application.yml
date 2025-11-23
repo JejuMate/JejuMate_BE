@@ -58,4 +58,4 @@ server:
 
 ai:
   chatbot:
-    url: https://jejumate.store
+    url: http://jejumate.store:8001

@@ -39,12 +39,9 @@ public class ChatbotService {
             aiInputMap.put("action", request.getAction());
             aiInputMap.put("constraints", request.getConstraints());
 
-            //JSON 문자열로 변환 (직렬화)
-            String jsonMessage = objectMapper.writeValueAsString(aiInputMap);
-            log.info("챗봇으로 보낼 JSON: {}", jsonMessage);
-
+            log.info("[ChatbotService] 챗봇으로 보낼 데이터: {}", aiInputMap);
             //챗봇 클라이언트 호출 (문자열 전송)
-            return chat(userId, jsonMessage, null);
+            return chat(userId, aiInputMap, null);
 
         } catch (Exception e) {
             log.error("JSON 변환 및 챗봇 통신 중 오류 발생", e);
@@ -53,10 +50,10 @@ public class ChatbotService {
     }
 
     @Transactional
-    public ChatbotResponse chat(Long userId, String message, Long currentScheduleId) {
+    public ChatbotResponse chat(Long userId, Object requestBody, Long currentScheduleId) {
 
         //챗봇과 통신
-        ChatbotResponse response = chatbotClient.sendChat(message);
+        ChatbotResponse response = chatbotClient.sendChat(requestBody);
         ChatbotAction action = response.getAction();
 
         //Action에 따른 ScheduleService 호출

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.List;
 
@@ -22,32 +23,29 @@ public class ChatbotClient {
     private String chatbotUrl;
 
     //챗봇에게 메시지 전송 및 응답 수신
-    public ChatbotResponse sendChat(String userMessage) {
+    public ChatbotResponse sendChat(Object requestBody) {
+        ChatbotResponse response;
 
-        AiChatbotRequest request = AiChatbotRequest.builder()
-                .messages(List.of(AiChatbotRequest.Message.builder()
-                        .role("user")
-                        .content(userMessage)
-                        .build()))
-                .build();
-
-        log.info("챗봇 서버 요청: {}", userMessage);
-
-        //FastAPI 호출
-        ChatbotResponse response = webClient.post()
-                .uri(chatbotUrl + "/api/chat")
+        try {
+                response = webClient.post()
+                .uri(chatbotUrl + "/chat")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
+                .bodyValue(requestBody)
                 .retrieve()
                 .bodyToMono(ChatbotResponse.class)
                 .block();
+        } catch (WebClientResponseException e) {
+            //서버 에러 이유 로그로 찍기
+            log.error("[ChatbotClient] 챗봇 서버 에러 응답: {}", e.getResponseBodyAsString());
+            throw e;
+        }
 
         if (response == null) {
-            log.error("챗봇 응답 null");
+            log.error("[ChatbotClient] 챗봇 응답이 null입니다.");
             throw new RuntimeException("챗봇 서버 통신 오류");
         }
 
-        log.info("챗봇 응답 수신 - Action: {}", response.getAction());
+        log.info("[ChatbotClient] 챗봇 응답 수신. Action: {}", response.getAction());
         return response;
     }
 }
