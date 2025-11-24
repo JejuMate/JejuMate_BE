@@ -55,4 +55,7 @@ visit-jeju:
 
 server:
     forward-headers-strategy: native
-  
+
+ai:
+  chatbot:
+    url: http://jejumate.store:8001
