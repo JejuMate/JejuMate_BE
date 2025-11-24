@@ -1,1 +1,3 @@
-# JejuMate_BE
+# 🏝️ JejuMate
+
+제주 여행을 가장 빠르고 정확하게 완성해주는 AI 여행 메이트
