@@ -1,6 +1,7 @@
 package com.Jejumate.Jejumate_BE.domain.chatbot.dto.request;
 
 import com.Jejumate.Jejumate_BE.domain.chatbot.enums.ChatbotAction;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class ChatbotResponse {
     //생성된 일정 (create_schedule)
     private List<ChatbotScheduleItem> schedule;
 
-    //특정 일정
+    //특정 일정 (수정, 삭제)
     private ChatbotTarget target;
 
     //대안 장소 목록 (suggest_alternative)
@@ -48,9 +49,13 @@ public class ChatbotResponse {
     @ToString
     public static class ChatbotScheduleItem {
         private int day;
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
         private LocalDate date;
+
         @JsonProperty("time_slot")
         private String timeSlot;
+
         private ChatbotPlace place;
     }
 
@@ -59,8 +64,10 @@ public class ChatbotResponse {
     @ToString
     public static class ChatbotTarget {
         private int day;
+
         @JsonProperty("time_slot")
         private String timeSlot;
+
         private String place;
     }
 

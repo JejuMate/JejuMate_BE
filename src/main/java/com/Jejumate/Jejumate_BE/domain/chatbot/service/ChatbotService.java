@@ -9,7 +9,6 @@ import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleItemRemoveRe
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.request.ScheduleItemUpdateRequest;
 import com.Jejumate.Jejumate_BE.domain.schedule.dto.response.ScheduleItemDto;
 import com.Jejumate.Jejumate_BE.domain.schedule.service.ScheduleService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,6 @@ public class ChatbotService {
 
     private final ChatbotClient chatbotClient;
     private final ScheduleService scheduleService;
-    private final ObjectMapper objectMapper;
 
     @Transactional
     public ChatbotResponse sendJsonToChatbot(Long userId, ChatbotRequest request) {
